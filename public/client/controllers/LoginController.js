@@ -18,22 +18,18 @@ angular.module('myApp').controller('LoginController',['$scope','$http','$state',
               //  console.log(response);
                // $scope.error = response.message || response;
             },function (response) {
-                console.log(response);
                 $scope.error = response.message || response;
             }
 
         )
 
     };
-    $scope.signup = function(){
-        console.log('abc');
-        $scope.error = null;
-        $http.post('/api/auth/signup',$scope.credentials)
-            .success(function (response) {
-                $scope.authentication.user = response;
+    $scope.signup = function() {
+        Auth.signup($scope.credentials,
+            function(response) {
                 $state.go('main');
-            }).error(function (response) {
-                console.log(response);
+            },
+            function(response) {
                 $scope.error = response.message || response;
             });
     };
