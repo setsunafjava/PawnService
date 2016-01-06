@@ -21,8 +21,8 @@ angular.module('myApp')
                 }
                 return user.username!='';
             },
-            register: function(user, success, error) {
-                $http.post('/register', user).success(function(res) {
+            signup: function(user, success, error) {
+                $http.post('/api/auth/signup', user).success(function(res) {
                     changeUser(res);
                     success();
                 }).error(error);
