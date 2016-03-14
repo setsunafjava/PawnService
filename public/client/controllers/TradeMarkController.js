@@ -3,7 +3,8 @@
  */
 angular.module('myApp').controller('TradeMarkController',
     function($scope,ResourceTradeMark){
-        $scope.create = function(){
+        $scope.create = function(file){
+            console.log(file);
             ResourceTradeMark.create($scope.trademark)
                 .then(
                 /* success function */

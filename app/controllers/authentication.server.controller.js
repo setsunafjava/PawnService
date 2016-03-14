@@ -1,8 +1,7 @@
 /**
  * Created by Tommy_Phan on 21/11/2015.
  */
-var User = require('mongoose').model('User'),
-    passport = require('passport');
+var    passport = require('passport');
 var getUniqueErrorMessage = function (err) {
     var output;
 
@@ -39,7 +38,7 @@ var getErrorMessage = function (err) {
     return message;
 };
 exports.login = function (req,res,next){
-    passport.authenticate('local',function(err,user,info){
+    passport.authenticate('local-login',function(err,user,info){
         if(err|| !user){
             res.status(400).send(info);
         }else {

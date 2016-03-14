@@ -6,6 +6,7 @@
  */
 var mongoose = require('mongoose'),
     TradeMark = mongoose.model('TradeMark');
+
 var getErrorMessage = function(err) {
     if (err.errors) {
         for (var errName in err.errors) {
@@ -17,7 +18,18 @@ var getErrorMessage = function(err) {
     }
 };
 exports.create = function(req,res){
-    var trademark = new TradeMark(req.body);
+    console.log(req.body);
+    upload(req,res,function(err) {
+        if(err) {
+            return res.status(400).send({
+                message : "Can't up load"
+            });
+        }else{
+            res.send("uploaded");
+        }
+
+    });
+   /* var trademark = new TradeMark(req.body);
     console.log(req.user);
     trademark.creator = req.user;
     trademark.created = Date.now();
@@ -29,7 +41,7 @@ exports.create = function(req,res){
         }else {
             res.json(trademark);
         }
-    });
+    });*/
 };
 exports.list = function(req,res){
     TradeMark.find().sort('-created').populate('creator','ObjectId title description').exec(function(err,trademark){

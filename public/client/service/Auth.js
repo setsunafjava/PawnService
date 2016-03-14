@@ -4,8 +4,8 @@
 'use strict';
 
 angular.module('myApp')
-    .factory('Auth', function($http, $cookieStore){
-
+    .factory('Auth', function($http, $cookieStore, $cookies){
+        console.log($cookies);
         var currentUser = $cookieStore.get('user') || { username: '' };
 
         $cookieStore.remove('user');

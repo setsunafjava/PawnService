@@ -6,11 +6,12 @@ angular.module('myApp')
 
         return {
             create: function (trademark) {
+                console.log(trademark);
                 var deferred = $q.defer();
                 var trademark = new TradeMarkService(trademark);
                 trademark.$save(function (response) {
                     deferred.resolve("Ok");
-                    $location.path('trademark/' + response._id);
+                   // $location.path('trademark/' + response._id);
                 }, function (errorResponse) {
                     deferred.reject(errorResponse.data.message);
                 });
