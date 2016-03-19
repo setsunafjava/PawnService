@@ -6,7 +6,7 @@ var authentication = require('../../app/controllers/authentication.server.contro
 module.exports =function(app,db){
     datatable.initData(db);
     console.log('run routes');
-    app.route('/api/datatablesfortestcase/:datatablesfortestcaseId')
+    app.route('/api/datatablesforpackage/:datatablesforpackagesId')
         .get(datatable.list)
         .post(authentication.requiresLogin,datatable.create);
     app.route('/api/datatables/:datatableId')

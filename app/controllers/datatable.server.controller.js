@@ -29,11 +29,11 @@ exports.create = function(req,res){
     });
 };
 exports.list = function(req,res){
-    dbconn.query('SELECT * FROM datatables where testcase_id=?',req.params.datatablesfortestcaseId,function(err, records){
+    dbconn.query('SELECT * FROM datatables where package_id=?',req.params.datatablesforpackagesId,function(err, records){
         if(err){
-            console.log(err);
+           // console.log(err);
             return res.status(400).send({
-                message : getErrorMessage(err)
+                message : "Load DataTable Error"
             });
 
         }else{
@@ -45,7 +45,7 @@ exports.list = function(req,res){
 exports.listRecords = function(req,res){
     dbconn.query("SELECT dt.*, pp.project_id, pj.title as project, pk.title as package FROM datatables AS dt INNER JOIN packages AS pk ON dt.package_id=pk.id INNER JOIN project_package AS pp ON pp.package_id=pk.id INNER JOIN projects AS pj ON pp.project_id=pj.id",function(err, records){
         if(err){
-            console.log(err);
+          //  console.log(err);
             return res.status(400).send({
                 message : getErrorMessage(err)
             });
@@ -56,7 +56,7 @@ exports.listRecords = function(req,res){
     });
 };
 exports.datarecordByID = function(req,res,next,id){
-    console.log('run param');
+    //console.log('run param');
     dbconn.query("SELECT dt.*, pp.project_id, pj.title as project, pk.title as package FROM datatables AS dt INNER JOIN packages AS pk ON dt.package_id=pk.id INNER JOIN project_package AS pp ON pp.package_id=pk.id INNER JOIN projects AS pj ON pp.project_id=pj.id WHERE dt.id = ? ",[id],function(err, records){
         if(err) return next(err);
         if(!records) return next(new Error('Failed to load datatable: '+ id));
@@ -66,7 +66,7 @@ exports.datarecordByID = function(req,res,next,id){
 };
 
 exports.datatableByID = function(req,res,next,id){
-    console.log('run param');
+  //  console.log('run param');
     dbconn.query('SELECT * FROM datatables where id = ?',[id],function(err, records){
         if(err) return next(err);
         if(!records) return next(new Error('Failed to load datatable: '+ id));
@@ -74,9 +74,8 @@ exports.datatableByID = function(req,res,next,id){
         next();
     });
 };
-
 exports.read = function (req,res) {
-    console.log('Abc');
+    //console.log('Abc');
     res.json(req.records);
 };
 

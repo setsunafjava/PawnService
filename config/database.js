@@ -3,7 +3,8 @@ module.exports = {
     'connection': {
         'host': 'localhost',
         'user': 'root',
-        'password': ''
+        'password': '',
+        'multipleStatements' : true
     },
 	'database': 'autotestinsightdb',
     'users_table': 'users'

@@ -1,0 +1,237 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Hospedagem
+        <small>Skeleton by Alberto</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
+        <li class="active">Here</li>
+    </ol>
+</section>
+
+<!-- Main content -->
+<section class="content" ng-controller="ViewRecords">
+    <input type="file" file-model="myFile"/><br><br>
+    <button ng-click="uploadFile()">Upload</button>
+    <ul id="context" class="dropdown-menu">
+        <li><a ng-click="showEdit($event)">Edit</a></li>
+
+        <li><a ng-click="delete_record($event)">Delete</a></li>
+    </ul>
+                <button class="btn btn-success" ng-click="add_record()"><i class="glyphicon glyphicon-plus"></i> Add Person</button>
+                <br>
+                <br>
+                <div id="table_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                    <div class="row">
+                    </div>
+                        <div class="col-sm-12"><div id="table_filter" class="dataTables_filter">
+                            <div class="form-group">
+                                <label for="filter">Project</label>
+                                <select class="form-control" ng-model="projectSelected" ng-init="projectSelected='xxx'" ng-change="loadPackage(projectSelected)">
+                                    <option value="xxx">---Select Project---</option>
+                                    <option ng-repeat="project in listProjects" value="{{project.id}}" >{{project.title}}</option>
+
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="filter">Package</label>
+                                <select class="form-control">
+                                    <option value="xxx">---Select Package---</option>
+                                    <option ng-repeat="package in listPackages"  value="{{package.id}}" >{{package.title}}</option>
+                                </select>
+                            </div>
+                            <label>Search:<input type="search" class="form-control input-sm" placeholder="" aria-controls="table">
+                                <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+
+
+                            </label>
+                        </div>
+                        </div></div>
+                    <div class="row"><div class="col-md-12 ">
+                        <div class="table-responsive">
+                        <table id="tableExample" class="table  table-bordered table-hover datatable " cellspacing="0" width="100%" role="grid" aria-describedby="table_info" style="">
+                    <thead>
+                    <tr role="row">
+                     <!--   <th style="width: 125px;" class="" rowspan="1" colspan="1" aria-label="Action">Action</th>-->
+                        <th class="" tabindex="0" aria-controls="table" rowspan="1" colspan="1" style="width: 141px;" ng-repeat="field in listFields">{{field.title}}</th>
+
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="record in listRecords" role="row" context="context" id="{{record.record_id}}">
+
+                        <td ng-repeat="field in listFields" >{{record[field.title]}}</td>
+                        </tr>
+
+                    <tfoot>
+                    <tr>
+                        <th class="" tabindex="0" aria-controls="table" rowspan="1" colspan="1" style="width: 141px;" ng-repeat="field in listFields">{{field.title}}</th>
+
+                    </tr>
+                    </tfoot>
+                </table></div><div id="table_processing" class="dataTables_processing" style="display: none;">Processing...</div></div></div><div class="row"><div class="col-sm-5"><div class="dataTables_info" id="table_info" role="status" aria-live="polite">Showing 1 to 6 of 6 entries</div></div><div class="col-sm-7"><div class="dataTables_paginate paging_simple_numbers" id="table_paginate"><ul class="pagination"><li class="paginate_button previous disabled" id="table_previous"><a href="#" aria-controls="table" data-dt-idx="0" tabindex="0">Previous</a></li><li class="paginate_button active"><a href="#" aria-controls="table" data-dt-idx="1" tabindex="0">1</a></li><li class="paginate_button next disabled" id="table_next"><a href="#" aria-controls="table" data-dt-idx="2" tabindex="0">Next</a></li></ul></div></div></div></div>
+    <div class="modal fade" id="modal_form" role="dialog" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h3 class="modal-title">Add Person</h3>
+                </div>
+                <div class="modal-body form">
+                    <form action="#" id="form" ng-model="formtest" class="form-horizontal">
+                        <input type="hidden" value="" name="id">
+                        <div class="form-body">
+                            <div class="form-group" ng-repeat="field in listFields">
+                                <label class="control-label col-md-3">{{field.title}}</label>
+                                <div class="col-md-9">
+                                    <input name="{{field.title}}" placeholder="{{field.title}}" ng-model="formtest" class="form-control" type="text">
+                                    <span class="help-block"></span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnSave" ng-click="edit_record($event)" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-danger" ng-click="testhide()">Cancel</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+
+
+</section>
+<!-- /.content -->
+<script>
+    $.AdminLTE.layout.activate();
+
+
+    var save_method; //for save method string
+
+
+
+    function add_person()
+    {
+        save_method = 'add';
+        $('#form')[0].reset(); // reset form on modals
+        $('.form-group').removeClass('has-error'); // clear error class
+        $('.help-block').empty(); // clear error string
+        $('#modal_form').modal('show'); // show bootstrap modal
+        $('.modal-title').text('Add Person'); // Set Title to Bootstrap modal title
+    }
+
+    function edit_person(id)
+    {
+        save_method = 'update';
+        $('#form')[0].reset(); // reset form on modals
+        $('.form-group').removeClass('has-error'); // clear error class
+        $('.help-block').empty(); // clear error string
+
+        //Ajax Load data from ajax
+        $.ajax({
+            url : "http://livedemo.mbahcoding.com/appdemo/index.php/ajax_crud_datatable_with_validation/ajax_edit/" + id,
+            type: "GET",
+            dataType: "JSON",
+            success: function(data)
+            {
+
+                $('[name="id"]').val(data.id);
+                $('[name="firstName"]').val(data.firstName);
+                $('[name="lastName"]').val(data.lastName);
+                $('[name="gender"]').val(data.gender);
+                $('[name="address"]').val(data.address);
+                $('[name="dob"]').datepicker('update',data.dob);
+                $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
+                $('.modal-title').text('Edit Person'); // Set title to Bootstrap modal title
+
+            },
+            error: function (jqXHR, textStatus, errorThrown)
+            {
+                alert('Error get data from ajax');
+            }
+        });
+    }
+
+    function reload_table()
+    {
+        table.ajax.reload(null,false); //reload datatable ajax
+    }
+
+    function save()
+    {
+        $('#btnSave').text('saving...'); //change button text
+        $('#btnSave').attr('disabled',true); //set button disable
+        var url;
+
+        if(save_method == 'add') {
+            url = "http://livedemo.mbahcoding.com/appdemo/index.php/ajax_crud_datatable_with_validation/ajax_add";
+        } else {
+            url = "http://livedemo.mbahcoding.com/appdemo/index.php/ajax_crud_datatable_with_validation/ajax_update";
+        }
+
+        // ajax adding data to database
+        $.ajax({
+            url : url,
+            type: "POST",
+            data: $('#form').serialize(),
+            dataType: "JSON",
+            success: function(data)
+            {
+
+                if(data.status) //if success close modal and reload ajax table
+                {
+                    $('#modal_form').modal('hide');
+                    reload_table();
+                }
+                else
+                {
+                    for (var i = 0; i < data.inputerror.length; i++)
+                    {
+                        $('[name="'+data.inputerror[i]+'"]').parent().parent().addClass('has-error'); //select parent twice to select div form-group class and add has-error class
+                        $('[name="'+data.inputerror[i]+'"]').next().text(data.error_string[i]); //select span help-block class set text error string
+                    }
+                }
+                $('#btnSave').text('save'); //change button text
+                $('#btnSave').attr('disabled',false); //set button enable
+
+
+            },
+            error: function (jqXHR, textStatus, errorThrown)
+            {
+                alert('Error adding / update data');
+                $('#btnSave').text('save'); //change button text
+                $('#btnSave').attr('disabled',false); //set button enable
+
+            }
+        });
+    }
+
+    function delete_person(id)
+    {
+        if(confirm('Are you sure delete this data?'))
+        {
+            // ajax delete data to database
+            $.ajax({
+                url : "http://livedemo.mbahcoding.com/appdemo/index.php/ajax_crud_datatable_with_validation/ajax_delete/"+id,
+                type: "POST",
+                dataType: "JSON",
+                success: function(data)
+                {
+                    //if success reload ajax table
+                    $('#modal_form').modal('hide');
+                    reload_table();
+                },
+                error: function (jqXHR, textStatus, errorThrown)
+                {
+                    alert('Error deleting data');
+                }
+            });
+
+        }
+    }
+
+
+</script>
